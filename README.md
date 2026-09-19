@@ -165,10 +165,26 @@ configs, trained checkpoints, and the dataset's normalization stats) — it
 does not retrain anything, so it starts in seconds. To regenerate the
 dataset or retrain a model, use the local Python workflow above instead.
 
+## Deploying to Hugging Face Spaces
+
+The verified `Dockerfile` above builds directly on [Hugging Face
+Spaces](https://huggingface.co/spaces) (Docker SDK), which is free and needs
+no server management:
+
+1. Create a Space at huggingface.co/new-space → SDK: **Docker** → visibility: **Public**.
+2. Replace the Space's auto-generated `README.md` with
+   [`hf_space_README.md`](hf_space_README.md) from this repo (it carries the
+   YAML header Spaces needs — `sdk: docker`, `app_port: 8000`).
+3. Push this repo's contents to the Space's git remote (shown on the Space's
+   page), or use the Space's "Files" tab to upload directly.
+4. The Space builds the same `Dockerfile` verified locally above and serves
+   the demo at `https://huggingface.co/spaces/<your-username>/<space-name>`.
+
 ## Live deployment
 
-- **Live demo:** _TODO — add the deployed URL here once hosted (e.g. Hugging Face Spaces, Render, or Railway, all of which build directly from this repo's `Dockerfile`)._
-- **Demo video:** _TODO — add a link to the recorded walkthrough here._
+- **GitHub repo:** https://github.com/harsha-040/eps-dynamic-gnn
+- **Live demo:** _TODO — add the Hugging Face Space URL here once deployed (steps above)._
+- **Demo video:** _TODO — record using [`DEMO_VIDEO_SCRIPT.md`](DEMO_VIDEO_SCRIPT.md), then link it here._
 
 ## Limitations
 
