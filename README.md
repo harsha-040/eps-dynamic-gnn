@@ -1,5 +1,8 @@
 # EPS Dynamic-GNN Fault Diagnosis
 
+**Live demo: https://eps-dynamic-gnn.onrender.com** (free tier — first
+request after idle takes ~30–50s to wake up)
+
 A dynamic Graph Neural Network (GNN) for fault diagnosis in a simulated
 satellite **Electrical Power System (EPS)**. This project mirrors the
 structure of Wu et al., *"Graph Neural Network-Assisted Fault Diagnosis for
@@ -192,7 +195,7 @@ demo link, not a production deployment.
 ## Live deployment
 
 - **GitHub repo:** https://github.com/harsha-040/eps-dynamic-gnn
-- **Live demo:** _TODO — add the Render URL here once deployed (steps above)._
+- **Live demo:** https://eps-dynamic-gnn.onrender.com (note: free tier spins down after 15 min idle — first request after a while takes ~30–50s to wake up)
 - **Demo video:** _TODO — record using [`DEMO_VIDEO_SCRIPT.md`](DEMO_VIDEO_SCRIPT.md), then link it here._
 
 ## Limitations
