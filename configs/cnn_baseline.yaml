@@ -1,0 +1,13 @@
+model: cnn_baseline
+model_params:
+  channels: [32, 32, 64]
+  kernel_size: 7
+  dropout: 0.2
+
+train:
+  batch_size: 16
+  lr: 0.001
+  weight_decay: 0.0001
+  epochs: 60
+  patience: 10
+  seed: 42

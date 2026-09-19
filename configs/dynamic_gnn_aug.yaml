@@ -1,0 +1,22 @@
+model: dynamic_gnn
+model_params:
+  embed_dim: 32
+  gcn_dim: 32
+  gat_dim: 16
+  gat_heads: 2
+  top_k: 3
+  gru_hidden: 80
+  dropout: 0.2
+
+train:
+  batch_size: 16
+  lr: 0.001
+  weight_decay: 0.0001
+  epochs: 60
+  patience: 10
+  seed: 42
+  augment:
+    enabled: true
+    prob: 0.7          # fraction of training batches that get corrupted at all
+    noise_max: 0.5      # per-batch noise level drawn ~ Uniform(0, noise_max) x per-channel std
+    dropout_max: 0.3    # per-batch dropout prob drawn ~ Uniform(0, dropout_max)

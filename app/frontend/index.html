@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>EPS Dynamic-GNN — Live Demo</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>🛰️ Satellite EPS Fault Diagnosis — Dynamic-GNN Live Demo</h1>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">What this page does</div>
+  <p>
+    This simulates a satellite's electrical power system (solar panel, battery, regulator, power bus, load),
+    optionally breaks something on purpose, then asks four different AI models — live, right now, not precomputed —
+    to guess what's wrong just from the sensor readings. The star of the show is the <b>Dynamic-GNN</b>: instead of a
+    fixed wiring diagram, it re-learns which components matter most to each other at every instant, and you can
+    watch that graph change in real time as the satellite crosses in and out of Earth's shadow.
+  </p>
+  <div class="hero-steps">
+    <div class="hero-step"><b>① Pick a scenario</b>Choose a fault type below and hit run — a fresh 96-minute orbit gets simulated instantly.</div>
+    <div class="hero-step"><b>② Watch the sensors</b>The telemetry charts show what each of the 5 components reported.</div>
+    <div class="hero-step"><b>③ See the verdict</b>All 4 models guess the fault, with their confidence, so you can compare.</div>
+    <div class="hero-step"><b>④ Explore the graph</b>Scrub the time slider to see the Dynamic-GNN's learned wiring shift.</div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2><span class="step-num">1</span>Choose a scenario</h2>
+  <p class="explain">
+    Each run simulates one full orbit (96 minutes) from scratch using real physics equations
+    (<code>src/simulation/eps_simulator.py</code>) — solar power, battery charge, voltage regulation — then, if you
+    pick a fault, corrupts one of those equations at a random point in time. <b>nominal</b> means nothing is broken;
+    it's deliberately the hardest case to spot.
+  </p>
+  <div class="controls">
+    <label>Fault class
+      <select id="faultSelect"></select>
+    </label>
+    <label>Random seed
+      <input id="seedInput" type="number" placeholder="random" style="width:90px">
+    </label>
+    <button id="runBtn">▶ Run simulation</button>
+    <span id="status" class="status"></span>
+  </div>
+</div>
+
+<div class="panel">
+  <h2><span class="step-num">2</span>Simulated telemetry (this run)</h2>
+  <p class="explain">
+    What each of the 5 satellite components reported over the orbit — voltage, current, power, temperature, and
+    (battery only) state-of-charge. Lines are individually rescaled to fit the chart, since volts/amps/watts/°C are
+    different units — <b>compare shapes and timing, not the raw heights between different-colored lines.</b>
+    <span class="eclipse-dot"></span>gray shading = eclipse (no sunlight) &nbsp;
+    <span class="fault-dot"></span>red shading = the fault is actively occurring.
+    Hover any chart for exact values at that moment.
+  </p>
+  <div id="telemetryGrid" class="grid grid-telemetry"></div>
+</div>
+
+<div class="grid grid-2">
+  <div class="panel">
+    <h2><span class="step-num">3</span>Live model predictions</h2>
+    <p class="explain">
+      All four models look at the <i>exact same</i> telemetry above and independently guess the fault class. The
+      green bar is always the true answer; a model is doing well if its own tallest bar lands on the green one.
+      <span class="tip">ⓘ<span class="tip-box">These are live inference calls to the trained PyTorch checkpoints — the bars are each model's softmax confidence across all 5 classes, not a lookup table.</span></span>
+    </p>
+    <div id="predictionsGrid"></div>
+  </div>
+
+  <div class="panel">
+    <h2><span class="step-num">4</span>How good are these models, generally?</h2>
+    <p class="explain">
+      Scores on 150 held-out test episodes the models never trained on — the honest measure of how well each one
+      generalizes, not just how it does on this one run above.
+    </p>
+    <table id="perfTable">
+      <thead><tr>
+        <th>Model</th><th>Params</th>
+        <th>Acc <span class="tip">ⓘ<span class="tip-box"><b>Accuracy</b>: % of test episodes classified correctly.</span></span></th>
+        <th>Recall <span class="tip">ⓘ<span class="tip-box"><b>Recall</b>: of the real faults, what fraction did the model actually catch?</span></span></th>
+        <th>F1 <span class="tip">ⓘ<span class="tip-box"><b>F1</b>: balance of recall and precision — punishes both missed faults and false alarms.</span></span></th>
+        <th>AUC <span class="tip">ⓘ<span class="tip-box"><b>AUC</b>: how well-separated the model's confidence scores are between right and wrong classes, 0.5=random, 1.0=perfect.</span></span></th>
+      </tr></thead>
+      <tbody></tbody>
+    </table>
+    <h3 style="margin-top:18px">Validation accuracy during training</h3>
+    <p class="explain" style="margin-bottom:8px">
+      Each model's accuracy on unseen validation data, checked after every training pass — shows how fast each
+      learned and where it leveled off. A model that trained well should climb quickly and then hold steady.
+    </p>
+    <div class="node-card" style="padding:10px">
+      <div class="chart-wrap"><canvas id="historyChart" width="480" height="220" style="width:100%;height:220px"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <h2><span class="step-num">5</span>Watch the Dynamic-GNN's graph structure evolve</h2>
+  <p class="explain">
+    This is the whole point of "dynamic" in the project name. Instead of assuming SA→PCU→BUS→LOAD is <i>always</i>
+    equally important, the model recomputes — at every single timestep — which components' readings should
+    influence each other most right now. Drag the slider (or hit Play) and watch the wiring visibly shift as the
+    satellite moves from eclipse into sunlight: the battery stops being the dominant power source and the solar
+    array takes over.
+  </p>
+  <div class="key-box">
+    <span class="key-item"><span class="key-line"></span>thick/bright line = strong learned connection</span>
+    <span class="key-item"><span class="key-line thin"></span>thin/faint line = weak connection</span>
+    <span class="key-item">arrow = direction info flows (source → destination)</span>
+    <span class="key-item">only each node's top-3 strongest sources are drawn, to stay readable</span>
+  </div>
+  <div class="slider-row">
+    <button id="playBtn" class="secondary">▶ Play</button>
+    <input id="timeSlider" type="range" min="0" max="239" value="0">
+    <span id="timeLabel" class="time-label">t = 0.0 min</span>
+  </div>
+  <div class="grid grid-graph">
+    <div class="node-card">
+      <h3>Power-flow graph at this instant</h3>
+      <svg id="graphSvg" width="100%" height="360" viewBox="0 0 480 360"></svg>
+    </div>
+    <div class="node-card">
+      <h3>Same data, as a matrix — A(t)</h3>
+      <p class="explain" style="margin-bottom:8px">
+        Row = the node <i>receiving</i> influence, column = the node <i>sending</i> it. Cell (row BAT, column SA)
+        answers "right now, how much does BAT's updated representation depend on SA?" Brighter = stronger.
+      </p>
+      <svg id="heatmapSvg" width="100%" height="300" viewBox="0 0 360 360"></svg>
+    </div>
+  </div>
+</div>
+
+<footer>
+  EPS Dynamic-GNN research project &middot; all data is simulated, not real satellite telemetry &middot;
+  see <code>RESULTS.md</code> in the project repo for the full write-up, ablations, and limitations
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+model,n_params,accuracy,recall_macro,f1_macro,auc_macro_ovr
+CNN,31973,0.7600,0.7600,0.7466,0.9431
+LSTM,17861,0.8267,0.8267,0.8315,0.9507
+Static-GNN (ACS-style),29109,0.8133,0.8133,0.8130,0.9599
+Dynamic-GNN (proposed),30357,0.9733,0.9733,0.9737,0.9960

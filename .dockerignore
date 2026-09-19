@@ -1,0 +1,12 @@
+.git
+.DS_Store
+**/__pycache__
+**/*.pyc
+.claude
+paper
+ppt
+notebooks
+data/processed/train.npz
+data/processed/val.npz
+data/processed/test.npz
+results/figures

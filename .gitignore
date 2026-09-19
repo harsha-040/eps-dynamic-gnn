@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+
+# Editor / tooling
+.claude/
+
+# LaTeX build artifacts
+paper/latex/*.aux
+paper/latex/*.log
+paper/latex/*.out
+paper/latex/*.synctex.gz
+
+# PPTX scratch/build files (keep the final out.pptx, drop working scratch)
+ppt/unpacked/
+ppt/__pycache__/
+ppt/*.jpg
+ppt/check1.pdf
+ppt/template_check.pdf
+ppt/final_check.pdf
