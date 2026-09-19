@@ -165,25 +165,34 @@ configs, trained checkpoints, and the dataset's normalization stats) — it
 does not retrain anything, so it starts in seconds. To regenerate the
 dataset or retrain a model, use the local Python workflow above instead.
 
-## Deploying to Hugging Face Spaces
+## Deploying to Render (free tier)
 
-The verified `Dockerfile` above builds directly on [Hugging Face
-Spaces](https://huggingface.co/spaces) (Docker SDK), which is free and needs
-no server management:
+The verified `Dockerfile` above builds directly on
+[Render](https://render.com)'s free Web Service tier — no card required, and
+the running container measures ~190MB RAM (see below), comfortably under
+Render free's 512MB limit:
 
-1. Create a Space at huggingface.co/new-space → SDK: **Docker** → visibility: **Public**.
-2. Replace the Space's auto-generated `README.md` with
-   [`hf_space_README.md`](hf_space_README.md) from this repo (it carries the
-   YAML header Spaces needs — `sdk: docker`, `app_port: 8000`).
-3. Push this repo's contents to the Space's git remote (shown on the Space's
-   page), or use the Space's "Files" tab to upload directly.
-4. The Space builds the same `Dockerfile` verified locally above and serves
-   the demo at `https://huggingface.co/spaces/<your-username>/<space-name>`.
+1. Sign up at render.com and connect your GitHub account.
+2. New → **Blueprint** → select this repo (`eps-dynamic-gnn`) — Render reads
+   [`render.yaml`](render.yaml) automatically and provisions a free Docker
+   web service. (Or: New → **Web Service** → select the repo → runtime
+   **Docker** → plan **Free**, if you'd rather configure it by hand.)
+3. Render builds the same `Dockerfile` verified locally above and serves the
+   demo at `https://eps-dynamic-gnn-<random>.onrender.com`.
+
+Free-tier note: the service spins down after 15 minutes of inactivity and
+takes ~30–50s to cold-start on the next request — expected and fine for a
+demo link, not a production deployment.
+
+> Hugging Face Spaces was the original plan, but Docker-SDK Spaces are now
+> gated behind the paid PRO plan ($9/mo) — only Gradio/Streamlit-SDK Spaces
+> stay free, which this FastAPI app doesn't use. If you already have HF PRO,
+> [`hf_space_README.md`](hf_space_README.md) still has the config for it.
 
 ## Live deployment
 
 - **GitHub repo:** https://github.com/harsha-040/eps-dynamic-gnn
-- **Live demo:** _TODO — add the Hugging Face Space URL here once deployed (steps above)._
+- **Live demo:** _TODO — add the Render URL here once deployed (steps above)._
 - **Demo video:** _TODO — record using [`DEMO_VIDEO_SCRIPT.md`](DEMO_VIDEO_SCRIPT.md), then link it here._
 
 ## Limitations

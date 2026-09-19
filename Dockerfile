@@ -17,4 +17,6 @@ COPY results/checkpoints ./results/checkpoints
 COPY results/metrics ./results/metrics
 
 EXPOSE 8000
-CMD ["uvicorn", "app.backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Shell form so $PORT expands: Render (and most PaaS hosts) inject PORT at
+# runtime and expect the app to bind to it; falls back to 8000 locally.
+CMD uvicorn app.backend.main:app --host 0.0.0.0 --port ${PORT:-8000}

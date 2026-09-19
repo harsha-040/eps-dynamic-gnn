@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: eps-dynamic-gnn
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/meta
