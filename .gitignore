@@ -23,3 +23,6 @@ ppt/*.jpg
 ppt/check1.pdf
 ppt/template_check.pdf
 ppt/final_check.pdf
+
+# Demo video build scratch (raw frames/narration/segments) — keep only demo_video.mp4
+demo_video_build/

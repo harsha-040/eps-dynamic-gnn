@@ -196,7 +196,7 @@ demo link, not a production deployment.
 
 - **GitHub repo:** https://github.com/harsha-040/eps-dynamic-gnn
 - **Live demo:** https://eps-dynamic-gnn.onrender.com (note: free tier spins down after 15 min idle — first request after a while takes ~30–50s to wake up)
-- **Demo video:** _TODO — record using [`DEMO_VIDEO_SCRIPT.md`](DEMO_VIDEO_SCRIPT.md), then link it here._
+- **Demo video:** [`demo_video.mp4`](demo_video.mp4) (~1m44s, narrated walkthrough of the live deployment — scenario selection, telemetry, all four models' predictions, and the learned graph A(t) shifting under an active PCU regulator fault)
 
 ## Limitations
 

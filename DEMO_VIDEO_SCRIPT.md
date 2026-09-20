@@ -1,5 +1,10 @@
 # Demo Video Script — EPS Dynamic-GNN Fault Diagnosis
 
+> **Note:** [`demo_video.mp4`](demo_video.mp4) already exists — a shorter (~1m44s),
+> auto-narrated version built from screenshots of the live Render deployment. Use
+> *this* script instead if you want to record your own longer, in-person-narrated
+> version with live cursor movement and Q&A framing for a presentation.
+
 Target length: **3–4 minutes**. Screen-record the live demo (local `uvicorn` run or
 the deployed URL) while reading this narration. Timestamps are guidance, not
 strict cues — pause naturally between sections.
